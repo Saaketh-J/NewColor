@@ -29,6 +29,7 @@ def process_image(filename):
 
 	return X_image, Y_image
 
+
 for file in files:
     try:
         lum, uv = process_image(file)
@@ -41,3 +42,6 @@ for file in files:
 
 X_train, X_test, y_train, y_test = tts(X, y, test_size=0.2, random_state=42)
 X_train, X_val, y_train, y_val = tts(X_train, y_train, test_size=0.1, random_state=42)
+
+print(X_train)
+print(y_train)
