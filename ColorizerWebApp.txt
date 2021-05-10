@@ -1,0 +1,397 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "ColorizerWebApp.ipynb",
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "L9TmUMgGnarV",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "cb84ab64-a2e4-4e72-9d20-3be2ef48e89a"
+      },
+      "source": [
+        "!pip install -U ipykernel"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Requirement already up-to-date: ipykernel in /usr/local/lib/python3.7/dist-packages (5.5.4)\n",
+            "Requirement already satisfied, skipping upgrade: ipython>=5.0.0 in /usr/local/lib/python3.7/dist-packages (from ipykernel) (5.5.0)\n",
+            "Requirement already satisfied, skipping upgrade: tornado>=4.2 in /usr/local/lib/python3.7/dist-packages (from ipykernel) (5.1.1)\n",
+            "Requirement already satisfied, skipping upgrade: traitlets>=4.1.0 in /usr/local/lib/python3.7/dist-packages (from ipykernel) (5.0.5)\n",
+            "Requirement already satisfied, skipping upgrade: jupyter-client in /usr/local/lib/python3.7/dist-packages (from ipykernel) (5.3.5)\n",
+            "Requirement already satisfied, skipping upgrade: simplegeneric>0.8 in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (0.8.1)\n",
+            "Requirement already satisfied, skipping upgrade: setuptools>=18.5 in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (56.1.0)\n",
+            "Requirement already satisfied, skipping upgrade: decorator in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (4.4.2)\n",
+            "Requirement already satisfied, skipping upgrade: pickleshare in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (0.7.5)\n",
+            "Requirement already satisfied, skipping upgrade: pygments in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (2.6.1)\n",
+            "Requirement already satisfied, skipping upgrade: pexpect; sys_platform != \"win32\" in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (4.8.0)\n",
+            "Requirement already satisfied, skipping upgrade: prompt-toolkit<2.0.0,>=1.0.4 in /usr/local/lib/python3.7/dist-packages (from ipython>=5.0.0->ipykernel) (1.0.18)\n",
+            "Requirement already satisfied, skipping upgrade: ipython-genutils in /usr/local/lib/python3.7/dist-packages (from traitlets>=4.1.0->ipykernel) (0.2.0)\n",
+            "Requirement already satisfied, skipping upgrade: pyzmq>=13 in /usr/local/lib/python3.7/dist-packages (from jupyter-client->ipykernel) (22.0.3)\n",
+            "Requirement already satisfied, skipping upgrade: jupyter-core>=4.6.0 in /usr/local/lib/python3.7/dist-packages (from jupyter-client->ipykernel) (4.7.1)\n",
+            "Requirement already satisfied, skipping upgrade: python-dateutil>=2.1 in /usr/local/lib/python3.7/dist-packages (from jupyter-client->ipykernel) (2.8.1)\n",
+            "Requirement already satisfied, skipping upgrade: ptyprocess>=0.5 in /usr/local/lib/python3.7/dist-packages (from pexpect; sys_platform != \"win32\"->ipython>=5.0.0->ipykernel) (0.7.0)\n",
+            "Requirement already satisfied, skipping upgrade: six>=1.9.0 in /usr/local/lib/python3.7/dist-packages (from prompt-toolkit<2.0.0,>=1.0.4->ipython>=5.0.0->ipykernel) (1.15.0)\n",
+            "Requirement already satisfied, skipping upgrade: wcwidth in /usr/local/lib/python3.7/dist-packages (from prompt-toolkit<2.0.0,>=1.0.4->ipython>=5.0.0->ipykernel) (0.2.5)\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "z7i8w4Yrnlp7",
+        "outputId": "42b5022e-18a5-4ad9-ca2a-42f87b26927d"
+      },
+      "source": [
+        "!pip install -q streamlit"
+      ],
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "\u001b[K     |████████████████████████████████| 8.2MB 9.7MB/s \n",
+            "\u001b[K     |████████████████████████████████| 81kB 6.8MB/s \n",
+            "\u001b[K     |████████████████████████████████| 112kB 67.0MB/s \n",
+            "\u001b[K     |████████████████████████████████| 163kB 61.5MB/s \n",
+            "\u001b[K     |████████████████████████████████| 4.2MB 54.0MB/s \n",
+            "\u001b[K     |████████████████████████████████| 71kB 6.3MB/s \n",
+            "\u001b[?25h  Building wheel for blinker (setup.py) ... \u001b[?25l\u001b[?25hdone\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "USu2PNQTp5_f",
+        "outputId": "49ef1e3a-c8e1-46a9-f42c-6606d376bbd9"
+      },
+      "source": [
+        "!pip install pyngrok"
+      ],
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Collecting pyngrok\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/6b/4e/a2fe095bbe17cf26424c4abcd22a0490e22d01cc628f25af5e220ddbf6f0/pyngrok-5.0.5.tar.gz (745kB)\n",
+            "\r\u001b[K     |▍                               | 10kB 16.5MB/s eta 0:00:01\r\u001b[K     |▉                               | 20kB 22.6MB/s eta 0:00:01\r\u001b[K     |█▎                              | 30kB 28.5MB/s eta 0:00:01\r\u001b[K     |█▊                              | 40kB 21.2MB/s eta 0:00:01\r\u001b[K     |██▏                             | 51kB 16.7MB/s eta 0:00:01\r\u001b[K     |██▋                             | 61kB 17.1MB/s eta 0:00:01\r\u001b[K     |███                             | 71kB 12.2MB/s eta 0:00:01\r\u001b[K     |███▌                            | 81kB 13.3MB/s eta 0:00:01\r\u001b[K     |████                            | 92kB 12.8MB/s eta 0:00:01\r\u001b[K     |████▍                           | 102kB 13.4MB/s eta 0:00:01\r\u001b[K     |████▉                           | 112kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████▎                          | 122kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████▊                          | 133kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████▏                         | 143kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████▋                         | 153kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████                         | 163kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████▌                        | 174kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████                        | 184kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████▍                       | 194kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████▉                       | 204kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████▎                      | 215kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████▊                      | 225kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████▏                     | 235kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████▌                     | 245kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████                     | 256kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████▍                    | 266kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████▉                    | 276kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████▎                   | 286kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████▊                   | 296kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████▏                  | 307kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████▋                  | 317kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████                  | 327kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████▌                 | 337kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████                 | 348kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████▍                | 358kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████▉                | 368kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████▎               | 378kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████▊               | 389kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████▏              | 399kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████▋              | 409kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████              | 419kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████▌             | 430kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████             | 440kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████▍            | 450kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████▉            | 460kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████▎           | 471kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████▊           | 481kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████████           | 491kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████████▌          | 501kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████          | 512kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████▍         | 522kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████▉         | 532kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████████▎        | 542kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████████▊        | 552kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████████▏       | 563kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████████▋       | 573kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████████████       | 583kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████████████▌      | 593kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████████      | 604kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████████▍     | 614kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████████▉     | 624kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████████████▎    | 634kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████████████▊    | 645kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████████████▏   | 655kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████████████▋   | 665kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████████████████   | 675kB 13.4MB/s eta 0:00:01\r\u001b[K     |█████████████████████████████▌  | 686kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████████████  | 696kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████████████▍ | 706kB 13.4MB/s eta 0:00:01\r\u001b[K     |██████████████████████████████▉ | 716kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████████████████▏| 727kB 13.4MB/s eta 0:00:01\r\u001b[K     |███████████████████████████████▋| 737kB 13.4MB/s eta 0:00:01\r\u001b[K     |████████████████████████████████| 747kB 13.4MB/s \n",
+            "\u001b[?25hRequirement already satisfied: PyYAML in /usr/local/lib/python3.7/dist-packages (from pyngrok) (3.13)\n",
+            "Building wheels for collected packages: pyngrok\n",
+            "  Building wheel for pyngrok (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for pyngrok: filename=pyngrok-5.0.5-cp37-none-any.whl size=19246 sha256=8a15252c2a4417f783c75ed2cf541e7ca710c9274523fa8569cb474fc2b47a5c\n",
+            "  Stored in directory: /root/.cache/pip/wheels/0c/13/64/5ebbcc22eaf53fdf5766b397c1fb17c83f5775fdccf0ea1b88\n",
+            "Successfully built pyngrok\n",
+            "Installing collected packages: pyngrok\n",
+            "Successfully installed pyngrok-5.0.5\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "jPkcU-CzqMoq",
+        "outputId": "c06cba36-e725-4467-bc90-1bf39eb6ad3c"
+      },
+      "source": [
+        "! ngrok authtoken "
+      ],
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Authtoken saved to configuration file: /root/.ngrok2/ngrok.yml\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9GHnDHUVoWol",
+        "outputId": "2547c6ac-2bc2-4f92-ae9a-6d6bb8521c74"
+      },
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ],
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(\"/content/drive\", force_remount=True).\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "CR4OBuOfojkW",
+        "outputId": "73e7152d-0bc5-44ea-c958-6d77ad9da280"
+      },
+      "source": [
+        "%%writefile imageColor.py\n",
+        "\n",
+        "import tensorflow as tf\n",
+        "import numpy as np\n",
+        "import streamlit as st\n",
+        "import requests\n",
+        "from skimage.color import rgb2lab, lab2rgb\n",
+        "from skimage import io\n",
+        "from matplotlib import pyplot as plt\n",
+        "\n",
+        "\n",
+        "st.set_option('deprecation.showfileUploaderEncoding', False)\n",
+        "st.title('B/W Image Colorizer')\n",
+        "st.text('Give URL of a black and white image to colorize it')\n",
+        "\n",
+        "@st.cache(allow_output_mutation=True)\n",
+        "def load_model():\n",
+        "  return tf.keras.models.load_model('drive/MyDrive/colorModel2')\n",
+        "\n",
+        "with st.spinner('Loading Model'):\n",
+        "  model = load_model()\n",
+        "\n",
+        "def preprocess(test_image):\n",
+        "  test_image = np.array(test_image, dtype=float)\n",
+        "  test_image = tf.image.resize(test_image, [256,256])\n",
+        "  test_image = rgb2lab(1.0/255*test_image)[:,:,0]\n",
+        "  test_image = test_image.reshape(1, 256, 256, 1)\n",
+        "  return test_image\n",
+        "\n",
+        "\n",
+        "def decode_img(image):\n",
+        "  img = tf.image.decode_jpeg(image,channels=3)\n",
+        "  img = preprocess(img)\n",
+        "  return img\n",
+        "\n",
+        "path = st.text_input('Enter Image URL to Colorize... ', 'https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-after/Landscape-BW.jpg')\n",
+        "if path is not None:\n",
+        "  image = requests.get(path).content\n",
+        "\n",
+        "  st.write(\"Predicted Image\")\n",
+        "  with st.spinner('Colorizing....'):\n",
+        "    result = model.predict(decode_img(image))\n",
+        "    result *= 128\n",
+        "\n",
+        "    cur = np.zeros((256, 256, 3))\n",
+        "    cur[:,:,0] = decode_img(image)[0][:,:,0]\n",
+        "    cur[:,:,1:] = result[0]\n",
+        "    st.image(lab2rgb(cur))"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Overwriting imageColor.py\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8rsaeOx5ph8o",
+        "outputId": "29b41a1a-5f1f-4521-c108-13b02e8b5345"
+      },
+      "source": [
+        "!nohup streamlit run imageColor.py &"
+      ],
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "nohup: appending output to 'nohup.out'\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "GkUEccWtpkhE",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "4c956d01-ad12-4958-ae22-6d4677fe416b"
+      },
+      "source": [
+        "! ngrok http 8501"
+      ],
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Traceback (most recent call last):\n",
+            "  File \"/usr/lib/python3.7/subprocess.py\", line 1019, in wait\n",
+            "    return self._wait(timeout=timeout)\n",
+            "  File \"/usr/lib/python3.7/subprocess.py\", line 1653, in _wait\n",
+            "    (pid, sts) = self._try_wait(0)\n",
+            "  File \"/usr/lib/python3.7/subprocess.py\", line 1611, in _try_wait\n",
+            "    (pid, sts) = os.waitpid(self.pid, wait_flags)\n",
+            "KeyboardInterrupt\n",
+            "\n",
+            "During handling of the above exception, another exception occurred:\n",
+            "\n",
+            "Traceback (most recent call last):\n",
+            "  File \"/usr/local/bin/ngrok\", line 8, in <module>\n",
+            "    sys.exit(main())\n",
+            "  File \"/usr/local/lib/python3.7/dist-packages/pyngrok/ngrok.py\", line 501, in main\n",
+            "    run(sys.argv[1:])\n",
+            "  File \"/usr/local/lib/python3.7/dist-packages/pyngrok/ngrok.py\", line 489, in run\n",
+            "    process.run_process(pyngrok_config.ngrok_path, args)\n",
+            "  File \"/usr/local/lib/python3.7/dist-packages/pyngrok/process.py\", line 339, in run_process\n",
+            "    subprocess.call(start)\n",
+            "  File \"/usr/lib/python3.7/subprocess.py\", line 341, in call\n",
+            "    return p.wait(timeout=timeout)\n",
+            "  File \"/usr/lib/python3.7/subprocess.py\", line 1032, in wait\n",
+            "    self._wait(timeout=sigint_timeout)\n",
+            "  File \"/usr/lib/python3.7/subprocess.py\", line 1647, in _wait\n",
+            "    time.sleep(delay)\n",
+            "KeyboardInterrupt\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "NTS3szkFrG0j",
+        "outputId": "20d7d564-e3cc-4b85-9e56-e781f93dab7a"
+      },
+      "source": [
+        "!cat nohup.out"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "2021-05-10 14:20:11.163443: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0\n",
+            "\n",
+            "  You can now view your Streamlit app in your browser.\n",
+            "\n",
+            "  Network URL: http://172.28.0.2:8501\n",
+            "  External URL: http://35.231.8.145:8501\n",
+            "\n",
+            "2021-05-10 14:20:13.462958: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "2021-05-10 14:20:13.496552: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1\n",
+            "2021-05-10 14:20:13.569040: E tensorflow/stream_executor/cuda/cuda_driver.cc:328] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected\n",
+            "2021-05-10 14:20:13.569132: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (b96d06b35f6f): /proc/driver/nvidia/version does not exist\n",
+            "2021-05-10 14:20:13.570481: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "  Stopping...\n",
+            "  Stopping...\n",
+            "2021-05-10 14:26:59.282535: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0\n",
+            "\n",
+            "  You can now view your Streamlit app in your browser.\n",
+            "\n",
+            "  Network URL: http://172.28.0.2:8501\n",
+            "  External URL: http://35.231.8.145:8501\n",
+            "\n",
+            "2021-05-10 14:27:01.669359: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "2021-05-10 14:27:01.672993: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1\n",
+            "2021-05-10 14:27:01.685765: E tensorflow/stream_executor/cuda/cuda_driver.cc:328] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected\n",
+            "2021-05-10 14:27:01.685858: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (b96d06b35f6f): /proc/driver/nvidia/version does not exist\n",
+            "2021-05-10 14:27:01.687330: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "2021-05-10 14:31:05.581601: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0\n",
+            "\n",
+            "  You can now view your Streamlit app in your browser.\n",
+            "\n",
+            "  Network URL: http://172.28.0.2:8502\n",
+            "  External URL: http://35.231.8.145:8502\n",
+            "\n",
+            "2021-05-10 14:31:07.903499: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "2021-05-10 14:31:07.906100: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1\n",
+            "2021-05-10 14:31:07.918517: E tensorflow/stream_executor/cuda/cuda_driver.cc:328] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected\n",
+            "2021-05-10 14:31:07.918629: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (b96d06b35f6f): /proc/driver/nvidia/version does not exist\n",
+            "2021-05-10 14:31:07.919807: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "2021-05-10 14:32:03.002807: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0\n",
+            "\n",
+            "  You can now view your Streamlit app in your browser.\n",
+            "\n",
+            "  Network URL: http://172.28.0.2:8503\n",
+            "  External URL: http://35.231.8.145:8503\n",
+            "\n",
+            "2021-05-10 14:32:05.219439: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "2021-05-10 14:32:05.222152: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1\n",
+            "2021-05-10 14:32:05.236362: E tensorflow/stream_executor/cuda/cuda_driver.cc:328] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected\n",
+            "2021-05-10 14:32:05.236961: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (b96d06b35f6f): /proc/driver/nvidia/version does not exist\n",
+            "2021-05-10 14:32:05.238597: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set\n",
+            "  Stopping...\n",
+            "  Stopping...\n",
+            "  Stopping...\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "E7mLJDJerJGe"
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
